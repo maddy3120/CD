@@ -1,0 +1,74 @@
+
+%{
+#include <stdio.h>
+
+int comm = 0;
+%}
+
+%x COMMENT
+
+%%
+
+"int"|"float"|"char"|"double"|"if"|"else"|"while"|"for"|"do"|"switch"|"case"|"break"|"continue"|"return"|"void"|"struct" {
+    printf("%s is a KEYWORD\n", yytext);
+}
+
+"#include"[ \t]*<[^>\n]+> {
+    printf("%s is a HEADER FILE\n", yytext);
+}
+
+[a-zA-Z_][a-zA-Z0-9_]* {
+    printf("%s is an IDENTIFIER\n", yytext);
+}
+
+[0-9]+(\.[0-9]+)? {
+    printf("%s is a NUMBER\n", yytext);
+}
+
+"=="|"!="|"<="|">="|"&&"|"||"|"+"|"-"|"*"|"/"|"="|"<"|">"|"%" {
+    printf("%s is an OPERATOR\n", yytext);
+}
+
+[\(\)\{\}\[\];,] {
+    printf("%s is a SPECIAL SYMBOL\n", yytext);
+}
+
+\"([^\"\\\n]|\\.)*\" {
+    printf("%s is a STRING\n", yytext);
+}
+
+\'([^\'\\\n]|\\.)\' {
+    printf("%s is a CHARACTER\n", yytext);
+}
+
+"//"[^\n]*    ;
+
+"/*"          { BEGIN(COMMENT); }
+<COMMENT>"*/" { BEGIN(INITIAL); }
+<COMMENT>\n   ;
+<COMMENT>.    ;
+
+[ \t\n]+      ;
+
+.             ;
+
+%%
+
+int yywrap() {
+    return 1;
+}
+
+int main() {
+    FILE *fp = fopen("sampleprog1.c", "r");
+
+    if (fp == NULL) {
+        printf("Cannot open file\n");
+        return 1;
+    }
+
+    yyin = fp;
+    yylex();
+
+    fclose(fp);
+    return 0;
+}
