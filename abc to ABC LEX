@@ -1,0 +1,29 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+"abc" {
+    printf("ABC");
+}
+"ABC" {
+	printf("abc");
+}
+
+.|\n {
+    printf("%s", yytext);
+}
+
+%%
+
+int yywrap()
+{
+    return 1;
+}
+
+int main()
+{
+    printf("Enter the string:\n");
+    yylex();
+    return 0;
+}
