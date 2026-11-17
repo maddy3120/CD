@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <string.h>
+
+char str[100];
+int temp = 90;
+
+void generate(char expr[])
+{
+    int i, j, pos, len;
+    char left, right, op, t;
+
+    len = strlen(expr);
+
+    for (i = 0; i < len; i++)
+    {
+        if (expr[i] == '*' || expr[i] == '/')
+        {
+            pos = i;
+            op = expr[i];
+            left = expr[i - 1];
+            right = expr[i + 1];
+            t = temp--;
+
+            printf("%c := %c%c%c\n", t, left, op, right);
+
+            expr[pos - 1] = t;
+            for (j = pos; j < len - 2; j++)
+                expr[j] = expr[j + 2];
+
+            len -= 2;
+            expr[len] = '\0';
+            i = -1;
+        }
+    }
+
+    for (i = 0; i < len; i++)
+    {
+        if (expr[i] == '+' || expr[i] == '-')
+        {
+            pos = i;
+            op = expr[i];
+            left = expr[i - 1];
+            right = expr[i + 1];
+            t = temp--;
+
+            printf("%c := %c%c%c\n", t, left, op, right);
+
+            expr[pos - 1] = t;
+            for (j = pos; j < len - 2; j++)
+                expr[j] = expr[j + 2];
+
+            len -= 2;
+            expr[len] = '\0';
+            i = -1;
+        }
+    }
+
+    printf("%c := %c\n", expr[0], expr[2]);
+}
+
+int main()
+{
+    printf("Enter the Expression: ");
+    scanf("%99s", str);
+
+    printf("The intermediate code:\n");
+    generate(str);
+
+    return 0;
+}
