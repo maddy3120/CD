@@ -1,0 +1,20 @@
+%{
+#include<stdio.h>
+int vowel=0;
+int consonant=0;
+%}
+%%
+[AEIOUaeiou]	{vowel++;}
+[a-zA-Z]	{consonant++;}
+%%
+int main(){
+	printf("Enter the string (press ctrl + D): \n");
+	yylex();
+	printf("No: of vowel=%d\n",vowel);
+	printf("No: of consonant=%d\n",consonant);
+	return 0;
+}
+int yywrap(){
+	return 1;
+}
+	
